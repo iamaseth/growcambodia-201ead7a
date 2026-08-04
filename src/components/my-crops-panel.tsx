@@ -33,6 +33,18 @@ export function MyCropsPanel() {
     );
   }, [cropsQ.data, q]);
 
+  const groups = useMemo(() => {
+    const map = new Map<string, typeof crops>();
+    for (const c of crops) {
+      const key = `${c.farms?.name ?? "Farm"} — ${c.title || "Unnamed plot"}`;
+      const arr = map.get(key) ?? [];
+      arr.push(c);
+      map.set(key, arr);
+    }
+    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  }, [crops]);
+
+
   if (!user) {
     return (
       <Card className="p-8 text-center space-y-3">
