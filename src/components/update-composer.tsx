@@ -238,7 +238,7 @@ export function UpdateComposer({
   if (!user) {
     return (
       <Button onClick={() => nav({ to: "/auth" })} size="lg" className="rounded-full shadow-lg">
-        <Plus className="h-5 w-5 mr-1" /> New update
+        <Plus className="h-5 w-5 mr-1" /> Post / add crop
       </Button>
     );
   }
@@ -248,13 +248,13 @@ export function UpdateComposer({
       <DialogTrigger asChild>
         {trigger ?? (
           <Button size="lg" className="rounded-full shadow-lg">
-            <Plus className="h-5 w-5 mr-1" /> New update
+            <Plus className="h-5 w-5 mr-1" /> Post / add crop
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>New growth update</DialogTitle>
+          <DialogTitle>{logId ? "Add to timeline" : "Post update or add a new crop"}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
