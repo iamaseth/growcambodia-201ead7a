@@ -170,7 +170,12 @@ function Home() {
             {(feedQ.data ?? []).map((item) => <UpdateCard key={item.id} item={item} />)}
           </TabsContent>
 
+          <TabsContent value="crops" className="mt-4">
+            <MyCropsPanel />
+          </TabsContent>
+
           <TabsContent value="map" className="mt-4 space-y-3">
+
             <FarmMap
               farms={farmsQ.data ?? []}
               onSelectFarm={setFocusFarm}
