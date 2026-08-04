@@ -85,6 +85,37 @@ export async function fetchMyLogs(userId: string): Promise<(PlantLog & { farms: 
   return data as any;
 }
 
+export type CropSummary = PlantLog & {
+  farms: Farm | null;
+  latest_stage: string | null;
+  last_update_at: string | null;
+  update_count: number;
+};
+
+/** All of a user's plant listings with their latest timeline activity, for quick "continue timeline" access. */
+export async function fetchMyCropSummaries(userId: string): Promise<CropSummary[]> {
+  const logs = await fetchMyLogs(userId);
+  if (!logs.length) return [];
+  const ids = logs.map((l) => l.id);
+  const { data: ups } = await supabase
+    .from("timeline_updates")
+    .select("log_id, growth_stage, created_at")
+    .in("log_id", ids)
+    .order("created_at", { ascending: false });
+  const latest: Record<string, { stage: string; at: string }> = {};
+  const counts: Record<string, number> = {};
+  (ups ?? []).forEach((u: any) => {
+    counts[u.log_id] = (counts[u.log_id] ?? 0) + 1;
+    if (!latest[u.log_id]) latest[u.log_id] = { stage: u.growth_stage, at: u.created_at };
+  });
+  return logs.map((l) => ({
+    ...l,
+    latest_stage: latest[l.id]?.stage ?? null,
+    last_update_at: latest[l.id]?.at ?? null,
+    update_count: counts[l.id] ?? 0,
+  }));
+}
+
 export async function fetchFeed(range?: { from?: string; to?: string }): Promise<FeedItem[]> {
   let q = supabase
     .from("timeline_updates")

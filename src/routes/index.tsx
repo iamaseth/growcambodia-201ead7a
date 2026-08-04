@@ -13,6 +13,7 @@ import { UpdateComposer } from "@/components/update-composer";
 import { VisitsPanel } from "@/components/visits-panel";
 import { NextVisitBadge } from "@/components/next-visit-badge";
 import { FarmTeamPanel } from "@/components/farm-team-panel";
+import { MyCropsPanel } from "@/components/my-crops-panel";
 import { fetchFarms, fetchFeed, fetchLogsForFarm, updateFarmLocation, type Farm } from "@/lib/db";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
@@ -103,11 +104,13 @@ function Home() {
 
       <main className="max-w-2xl mx-auto px-4 pt-4">
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="feed"><Rss className="h-4 w-4 mr-1.5" /> Feed</TabsTrigger>
-            <TabsTrigger value="map"><MapIcon className="h-4 w-4 mr-1.5" /> Map</TabsTrigger>
-            <TabsTrigger value="visits"><CalendarClock className="h-4 w-4 mr-1.5" /> Visits</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="feed"><Rss className="h-4 w-4 mr-1" /> Feed</TabsTrigger>
+            <TabsTrigger value="crops"><Sprout className="h-4 w-4 mr-1" /> Crops</TabsTrigger>
+            <TabsTrigger value="map"><MapIcon className="h-4 w-4 mr-1" /> Map</TabsTrigger>
+            <TabsTrigger value="visits"><CalendarClock className="h-4 w-4 mr-1" /> Visits</TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="feed" className="space-y-3 mt-4">
             <h1 className="sr-only">Community feed</h1>
@@ -168,7 +171,12 @@ function Home() {
             {(feedQ.data ?? []).map((item) => <UpdateCard key={item.id} item={item} />)}
           </TabsContent>
 
+          <TabsContent value="crops" className="mt-4">
+            <MyCropsPanel />
+          </TabsContent>
+
           <TabsContent value="map" className="mt-4 space-y-3">
+
             <FarmMap
               farms={farmsQ.data ?? []}
               onSelectFarm={setFocusFarm}
