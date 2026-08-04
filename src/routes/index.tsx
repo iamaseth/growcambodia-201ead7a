@@ -103,11 +103,13 @@ function Home() {
 
       <main className="max-w-2xl mx-auto px-4 pt-4">
         <Tabs value={tab} onValueChange={setTab}>
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="feed"><Rss className="h-4 w-4 mr-1.5" /> Feed</TabsTrigger>
-            <TabsTrigger value="map"><MapIcon className="h-4 w-4 mr-1.5" /> Map</TabsTrigger>
-            <TabsTrigger value="visits"><CalendarClock className="h-4 w-4 mr-1.5" /> Visits</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="feed"><Rss className="h-4 w-4 mr-1" /> Feed</TabsTrigger>
+            <TabsTrigger value="crops"><Sprout className="h-4 w-4 mr-1" /> Crops</TabsTrigger>
+            <TabsTrigger value="map"><MapIcon className="h-4 w-4 mr-1" /> Map</TabsTrigger>
+            <TabsTrigger value="visits"><CalendarClock className="h-4 w-4 mr-1" /> Visits</TabsTrigger>
           </TabsList>
+
 
           <TabsContent value="feed" className="space-y-3 mt-4">
             <h1 className="sr-only">Community feed</h1>
