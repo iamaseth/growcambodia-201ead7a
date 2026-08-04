@@ -165,7 +165,7 @@ function Home() {
               <Card className="p-8 text-center space-y-2">
                 <Sprout className="h-10 w-10 text-primary mx-auto" />
                 <p className="font-medium">No updates yet — be the first to post</p>
-                <p className="text-sm text-muted-foreground">Tap "New update" below to log the first growth stage.</p>
+                <p className="text-sm text-muted-foreground">Tap "Post / add crop" below to log the first growth stage.</p>
               </Card>
             )}
             {(feedQ.data ?? []).map((item) => <UpdateCard key={item.id} item={item} />)}
