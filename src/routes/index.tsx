@@ -13,6 +13,7 @@ import { UpdateComposer } from "@/components/update-composer";
 import { VisitsPanel } from "@/components/visits-panel";
 import { NextVisitBadge } from "@/components/next-visit-badge";
 import { FarmTeamPanel } from "@/components/farm-team-panel";
+import { MyCropsPanel } from "@/components/my-crops-panel";
 import { fetchFarms, fetchFeed, fetchLogsForFarm, updateFarmLocation, type Farm } from "@/lib/db";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
