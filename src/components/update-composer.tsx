@@ -224,6 +224,7 @@ export function UpdateComposer({
       qc.invalidateQueries({ queryKey: ["feed"] });
       qc.invalidateQueries({ queryKey: ["timeline", targetLog] });
       qc.invalidateQueries({ queryKey: ["mylogs"] });
+      qc.invalidateQueries({ queryKey: ["mycrops"] });
       reset();
       setOpen(false);
       onCreated?.();
