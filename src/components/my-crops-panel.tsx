@@ -76,50 +76,58 @@ export function MyCropsPanel() {
           <Sprout className="h-10 w-10 text-primary mx-auto" />
           <p className="font-medium">No plant listings yet</p>
           <p className="text-sm text-muted-foreground">
-            Tap "New update" below and choose "+ Add new plant" to start your first crop timeline.
+            Tap "Post / add crop" below and choose "+ Add new plant" to start your first crop timeline.
           </p>
         </Card>
       )}
 
-      {crops.map((c) => (
-        <Card key={c.id} className="p-4 space-y-3">
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <Link to="/log/$logId" params={{ logId: c.id }} className="font-semibold hover:underline block truncate">
-                {c.title}
-              </Link>
-              <p className="text-xs text-muted-foreground truncate">
-                {c.crop_type}
-                {c.variety ? ` · ${c.variety}` : ""}
-                {c.farms?.name ? ` · ${c.farms.name}` : ""}
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {c.update_count > 0
-                  ? `${c.update_count} update${c.update_count === 1 ? "" : "s"} · last ${formatDMY(c.last_update_at!)}`
-                  : "No updates yet"}
-                {c.quantity ? ` · ${c.quantity} plants` : ""}
-                {c.area_value ? ` · ${c.area_value} ${c.area_unit === "hectares" ? "ha" : "m²"}` : ""}
-              </p>
-            </div>
-            {c.latest_stage && <Badge variant="secondary" className="shrink-0">{c.latest_stage}</Badge>}
-          </div>
+      {groups.map(([groupLabel, items]) => (
+        <div key={groupLabel} className="space-y-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground px-1 pt-2">
+            {groupLabel}
+          </h3>
 
-          <div className="flex gap-2">
-            <UpdateComposer
-              logId={c.id}
-              trigger={
-                <Button size="sm" className="flex-1">
-                  <Plus className="h-4 w-4 mr-1" /> Add to timeline
-                </Button>
-              }
-            />
-            <Link to="/log/$logId" params={{ logId: c.id }} className="flex-1">
-              <Button size="sm" variant="outline" className="w-full">
-                <History className="h-4 w-4 mr-1" /> Timeline
-              </Button>
-            </Link>
-          </div>
-        </Card>
+          {items.map((c) => (
+            <Card key={c.id} className="p-4 space-y-3">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <Link to="/log/$logId" params={{ logId: c.id }} className="font-semibold hover:underline block truncate">
+                    {c.crop_type}
+                    {c.variety ? ` · ${c.variety}` : ""}
+                  </Link>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {c.farms?.name ?? "Farm"}
+                    {c.title ? ` · ${c.title}` : ""}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {c.update_count > 0
+                      ? `${c.update_count} update${c.update_count === 1 ? "" : "s"} · last ${formatDMY(c.last_update_at!)}`
+                      : "No updates yet"}
+                    {c.quantity ? ` · ${c.quantity} plants` : ""}
+                    {c.area_value ? ` · ${c.area_value} ${c.area_unit === "hectares" ? "ha" : "m²"}` : ""}
+                  </p>
+                </div>
+                {c.latest_stage && <Badge variant="secondary" className="shrink-0">{c.latest_stage}</Badge>}
+              </div>
+
+              <div className="flex gap-2">
+                <UpdateComposer
+                  logId={c.id}
+                  trigger={
+                    <Button size="sm" className="flex-1">
+                      <Plus className="h-4 w-4 mr-1" /> Add to timeline
+                    </Button>
+                  }
+                />
+                <Link to="/log/$logId" params={{ logId: c.id }} className="flex-1">
+                  <Button size="sm" variant="outline" className="w-full">
+                    <History className="h-4 w-4 mr-1" /> Timeline
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          ))}
+        </div>
       ))}
     </div>
   );
