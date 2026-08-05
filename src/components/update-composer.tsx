@@ -106,6 +106,15 @@ export function UpdateComposer({
     if (latestStageQ.data) setStage(latestStageQ.data);
   }, [latestStageQ.data]);
 
+  // Single-farm users: pick it automatically and hide the farm dropdown.
+  const onlyFarm = (farms ?? []).length === 1 ? farms![0] : null;
+  useEffect(() => {
+    if (onlyFarm && !selectedFarm && !newFarmMode) setSelectedFarm(onlyFarm.id);
+  }, [onlyFarm, selectedFarm, newFarmMode]);
+
+  const creatingNewCrop = newLogMode || newFarmMode;
+
+
 
   const handleFiles = (fl: FileList | null) => {
     if (!fl) return;
