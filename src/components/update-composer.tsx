@@ -312,13 +312,17 @@ export function UpdateComposer({
               {(selectedFarm || newFarmMode) && (
                 <div className="space-y-2 rounded border p-3">
                   <div className="flex items-center justify-between">
-                    <Label>Plant log</Label>
+                    <Label>Crop</Label>
                     <button
                       type="button"
                       className="text-xs text-primary hover:underline"
-                      onClick={() => setNewLogMode((v) => !v)}
+                      onClick={() => {
+                        setNewLogMode((v) => !v);
+                        setSelectedLog("");
+                        setStage("Vegetative");
+                      }}
                     >
-                      {newLogMode ? "Pick existing" : "+ New log"}
+                      {newLogMode ? "Pick existing" : "+ Add new crop"}
                     </button>
                   </div>
                   {newLogMode || newFarmMode ? (
