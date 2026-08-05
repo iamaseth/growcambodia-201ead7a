@@ -472,7 +472,7 @@ export function UpdateComposer({
 
           <Button className="w-full h-11" onClick={submit} disabled={busy}>
             {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Post update
+            {!logId && creatingNewCrop ? "Add crop" : "Post update"}
           </Button>
         </div>
       </DialogContent>
