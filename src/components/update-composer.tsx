@@ -295,6 +295,8 @@ export function UpdateComposer({
                       {farmCoords ? `Location captured (${farmCoords.lat.toFixed(4)}, ${farmCoords.lng.toFixed(4)})` : "Use my current location"}
                     </Button>
                   </div>
+                ) : onlyFarm ? (
+                  <p className="text-sm text-muted-foreground">{onlyFarm.name}</p>
                 ) : (
                   <Select value={selectedFarm} onValueChange={(v) => { setSelectedFarm(v); setSelectedLog(""); }}>
                     <SelectTrigger><SelectValue placeholder="Choose a farm" /></SelectTrigger>
