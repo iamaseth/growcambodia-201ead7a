@@ -171,7 +171,23 @@ export async function createFarm(input: { name: string; lat: number; lng: number
     .select()
     .single();
   if (error) throw error;
-  return data as Farm;
+  const farm = data as Farm;
+  // Ensure the creator is an active owner member so the farm shows up in "My Farms".
+  const { error: memberError } = await supabase
+    .from("farm_members")
+    .upsert(
+      {
+        farm_id: farm.id,
+        user_id: userId,
+        member_role: "owner",
+        status: "active",
+        invited_by: userId,
+        accepted_at: new Date().toISOString(),
+      },
+      { onConflict: "farm_id,user_id", ignoreDuplicates: true },
+    );
+  if (memberError) throw memberError;
+  return farm;
 }
 
 export async function updateFarmLocation(farmId: string, lat: number, lng: number) {

@@ -106,6 +106,15 @@ export function UpdateComposer({
     if (latestStageQ.data) setStage(latestStageQ.data);
   }, [latestStageQ.data]);
 
+  // Single-farm users: pick it automatically and hide the farm dropdown.
+  const onlyFarm = (farms ?? []).length === 1 ? farms![0] : null;
+  useEffect(() => {
+    if (onlyFarm && !selectedFarm && !newFarmMode) setSelectedFarm(onlyFarm.id);
+  }, [onlyFarm, selectedFarm, newFarmMode]);
+
+  const creatingNewCrop = newLogMode || newFarmMode;
+
+
 
   const handleFiles = (fl: FileList | null) => {
     if (!fl) return;
@@ -286,6 +295,8 @@ export function UpdateComposer({
                       {farmCoords ? `Location captured (${farmCoords.lat.toFixed(4)}, ${farmCoords.lng.toFixed(4)})` : "Use my current location"}
                     </Button>
                   </div>
+                ) : onlyFarm ? (
+                  <p className="text-sm text-muted-foreground">{onlyFarm.name}</p>
                 ) : (
                   <Select value={selectedFarm} onValueChange={(v) => { setSelectedFarm(v); setSelectedLog(""); }}>
                     <SelectTrigger><SelectValue placeholder="Choose a farm" /></SelectTrigger>
@@ -301,13 +312,17 @@ export function UpdateComposer({
               {(selectedFarm || newFarmMode) && (
                 <div className="space-y-2 rounded border p-3">
                   <div className="flex items-center justify-between">
-                    <Label>Plant log</Label>
+                    <Label>Crop</Label>
                     <button
                       type="button"
                       className="text-xs text-primary hover:underline"
-                      onClick={() => setNewLogMode((v) => !v)}
+                      onClick={() => {
+                        setNewLogMode((v) => !v);
+                        setSelectedLog("");
+                        setStage("Vegetative");
+                      }}
                     >
-                      {newLogMode ? "Pick existing" : "+ New log"}
+                      {newLogMode ? "Pick existing" : "+ Add new crop"}
                     </button>
                   </div>
                   {newLogMode || newFarmMode ? (
@@ -385,27 +400,28 @@ export function UpdateComposer({
                         if (v === "__new__") {
                           setNewLogMode(true);
                           setSelectedLog("");
+                          setStage("Vegetative");
                         } else {
                           setSelectedLog(v);
                         }
                       }}
                     >
-                      <SelectTrigger><SelectValue placeholder="Choose which plant" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Choose which crop" /></SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="__new__">+ Add new crop</SelectItem>
                         {(logs ?? []).map((l) => (
-                          <SelectItem key={l.id} value={l.id}>{l.title} · {l.crop_type}</SelectItem>
+                          <SelectItem key={l.id} value={l.id}>{l.crop_type} · {l.title}</SelectItem>
                         ))}
                         {(logs ?? []).length === 0 && (
-                          <div className="px-2 py-1.5 text-xs text-muted-foreground">No plants at this farm yet.</div>
+                          <div className="px-2 py-1.5 text-xs text-muted-foreground">No crops at this farm yet.</div>
                         )}
-                        <SelectItem value="__new__">+ Add new plant</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
-
                 </div>
               )}
             </>
+
           )}
 
           <div className="space-y-1.5">
@@ -456,7 +472,7 @@ export function UpdateComposer({
 
           <Button className="w-full h-11" onClick={submit} disabled={busy}>
             {busy && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-            Post update
+            {!logId && creatingNewCrop ? "Add crop" : "Post update"}
           </Button>
         </div>
       </DialogContent>
