@@ -400,26 +400,24 @@ export function UpdateComposer({
                         if (v === "__new__") {
                           setNewLogMode(true);
                           setSelectedLog("");
+                          setStage("Vegetative");
                         } else {
                           setSelectedLog(v);
                         }
                       }}
                     >
-                      <SelectTrigger><SelectValue placeholder="Choose which plant" /></SelectTrigger>
+                      <SelectTrigger><SelectValue placeholder="Choose which crop" /></SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="__new__">+ Add new crop</SelectItem>
                         {(logs ?? []).map((l) => (
-                          <SelectItem key={l.id} value={l.id}>{l.title} · {l.crop_type}</SelectItem>
+                          <SelectItem key={l.id} value={l.id}>{l.crop_type} · {l.title}</SelectItem>
                         ))}
                         {(logs ?? []).length === 0 && (
-                          <div className="px-2 py-1.5 text-xs text-muted-foreground">No plants at this farm yet.</div>
+                          <div className="px-2 py-1.5 text-xs text-muted-foreground">No crops at this farm yet.</div>
                         )}
-                        <SelectItem value="__new__">+ Add new plant</SelectItem>
                       </SelectContent>
                     </Select>
                   )}
-
-                </div>
-              )}
             </>
           )}
 
