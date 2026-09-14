@@ -7,6 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { Camera } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
@@ -80,14 +81,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#2f7d3a" },
-      { title: "Grow Cambodia — Farm Visit & Field Trial Tracker" },
-      { name: "description", content: "Plan farm visits, log growth stages, and track field trials across Cambodia." },
-      { property: "og:title", content: "Grow Cambodia — Farm Visit & Field Trial Tracker" },
-      { property: "og:description", content: "Plan farm visits, log growth stages, and track field trials across Cambodia." },
+      { title: "Grow Cambodia — Plant Identification & Growth Timeline" },
+      { name: "description", content: "Identify plants, get Cambodia-focused growing guidance, and track plant growth with photos." },
+      { property: "og:title", content: "Grow Cambodia — Plant Identification & Growth Timeline" },
+      { property: "og:description", content: "Identify plants, get Cambodia-focused growing guidance, and track plant growth with photos." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Grow Cambodia — Farm Visit & Field Trial Tracker" },
-      { name: "twitter:description", content: "Plan farm visits, log growth stages, and track field trials across Cambodia." },
+      { name: "twitter:title", content: "Grow Cambodia — Plant Identification & Growth Timeline" },
+      { name: "twitter:description", content: "Identify plants, get Cambodia-focused growing guidance, and track plant growth with photos." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d53c2dc3-162b-4e0f-80f8-4abd4c24519d/id-preview-d1fbabf2--441035ed-b074-4d59-a725-477c7c8230f9.lovable.app-1783048125247.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d53c2dc3-162b-4e0f-80f8-4abd4c24519d/id-preview-d1fbabf2--441035ed-b074-4d59-a725-477c7c8230f9.lovable.app-1783048125247.png" },
     ],
@@ -123,6 +124,14 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Outlet />
+        <Link
+          to="/identify"
+          aria-label="Identify a plant"
+          className="fixed bottom-6 right-4 z-50 inline-flex h-12 items-center gap-2 rounded-full bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90"
+        >
+          <Camera className="h-5 w-5" />
+          <span className="hidden sm:inline">Identify Plant</span>
+        </Link>
         <Toaster position="top-center" richColors />
       </AuthProvider>
     </QueryClientProvider>
