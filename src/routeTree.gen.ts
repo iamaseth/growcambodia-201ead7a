@@ -12,51 +12,26 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as MyFarmsRouteImport } from './routes/my-farms'
 import { Route as IdentifyRouteImport } from './routes/identify'
+import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AdminFeedRouteImport } from './routes/admin-feed'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LogLogIdRouteImport } from './routes/log.$logId'
 
-const ReviewRoute = ReviewRouteImport.update({
-  id: '/review',
-  path: '/review',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MyFarmsRoute = MyFarmsRouteImport.update({
-  id: '/my-farms',
-  path: '/my-farms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IdentifyRoute = IdentifyRouteImport.update({
-  id: '/identify',
-  path: '/identify',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminFeedRoute = AdminFeedRouteImport.update({
-  id: '/admin-feed',
-  path: '/admin-feed',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LogLogIdRoute = LogLogIdRouteImport.update({
-  id: '/log/$logId',
-  path: '/log/$logId',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ReviewRoute = ReviewRouteImport.update({ id: '/review', path: '/review', getParentRoute: () => rootRouteImport } as any)
+const MyFarmsRoute = MyFarmsRouteImport.update({ id: '/my-farms', path: '/my-farms', getParentRoute: () => rootRouteImport } as any)
+const IdentifyRoute = IdentifyRouteImport.update({ id: '/identify', path: '/identify', getParentRoute: () => rootRouteImport } as any)
+const ChatRoute = ChatRouteImport.update({ id: '/chat', path: '/chat', getParentRoute: () => rootRouteImport } as any)
+const AdminFeedRoute = AdminFeedRouteImport.update({ id: '/admin-feed', path: '/admin-feed', getParentRoute: () => rootRouteImport } as any)
+const AuthRoute = AuthRouteImport.update({ id: '/auth', path: '/auth', getParentRoute: () => rootRouteImport } as any)
+const IndexRoute = IndexRouteImport.update({ id: '/', path: '/', getParentRoute: () => rootRouteImport } as any)
+const LogLogIdRoute = LogLogIdRouteImport.update({ id: '/log/$logId', path: '/log/$logId', getParentRoute: () => rootRouteImport } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin-feed': typeof AdminFeedRoute
   '/auth': typeof AuthRoute
+  '/chat': typeof ChatRoute
   '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
   '/review': typeof ReviewRoute
@@ -66,6 +41,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-feed': typeof AdminFeedRoute
   '/auth': typeof AuthRoute
+  '/chat': typeof ChatRoute
   '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
   '/review': typeof ReviewRoute
@@ -76,6 +52,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin-feed': typeof AdminFeedRoute
   '/auth': typeof AuthRoute
+  '/chat': typeof ChatRoute
   '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
   '/review': typeof ReviewRoute
@@ -83,16 +60,17 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin-feed' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  fullPaths: '/' | '/admin-feed' | '/auth' | '/chat' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin-feed' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
-  id: '__root__' | '/' | '/admin-feed' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  to: '/' | '/admin-feed' | '/auth' | '/chat' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  id: '__root__' | '/' | '/admin-feed' | '/auth' | '/chat' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminFeedRoute: typeof AdminFeedRoute
   AuthRoute: typeof AuthRoute
+  ChatRoute: typeof ChatRoute
   IdentifyRoute: typeof IdentifyRoute
   MyFarmsRoute: typeof MyFarmsRoute
   ReviewRoute: typeof ReviewRoute
@@ -101,66 +79,26 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/review': {
-      id: '/review'
-      path: '/review'
-      fullPath: '/review'
-      preLoaderRoute: typeof ReviewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/my-farms': {
-      id: '/my-farms'
-      path: '/my-farms'
-      fullPath: '/my-farms'
-      preLoaderRoute: typeof MyFarmsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/identify': {
-      id: '/identify'
-      path: '/identify'
-      fullPath: '/identify'
-      preLoaderRoute: typeof IdentifyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin-feed': {
-      id: '/admin-feed'
-      path: '/admin-feed'
-      fullPath: '/admin-feed'
-      preLoaderRoute: typeof AdminFeedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/log/$logId': {
-      id: '/log/$logId'
-      path: '/log/$logId'
-      fullPath: '/log/$logId'
-      preLoaderRoute: typeof LogLogIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+    '/review': { id: '/review'; path: '/review'; fullPath: '/review'; preLoaderRoute: typeof ReviewRouteImport; parentRoute: typeof rootRouteImport }
+    '/my-farms': { id: '/my-farms'; path: '/my-farms'; fullPath: '/my-farms'; preLoaderRoute: typeof MyFarmsRouteImport; parentRoute: typeof rootRouteImport }
+    '/identify': { id: '/identify'; path: '/identify'; fullPath: '/identify'; preLoaderRoute: typeof IdentifyRouteImport; parentRoute: typeof rootRouteImport }
+    '/chat': { id: '/chat'; path: '/chat'; fullPath: '/chat'; preLoaderRoute: typeof ChatRouteImport; parentRoute: typeof rootRouteImport }
+    '/admin-feed': { id: '/admin-feed'; path: '/admin-feed'; fullPath: '/admin-feed'; preLoaderRoute: typeof AdminFeedRouteImport; parentRoute: typeof rootRouteImport }
+    '/auth': { id: '/auth'; path: '/auth'; fullPath: '/auth'; preLoaderRoute: typeof AuthRouteImport; parentRoute: typeof rootRouteImport }
+    '/': { id: '/'; path: '/'; fullPath: '/'; preLoaderRoute: typeof IndexRouteImport; parentRoute: typeof rootRouteImport }
+    '/log/$logId': { id: '/log/$logId'; path: '/log/$logId'; fullPath: '/log/$logId'; preLoaderRoute: typeof LogLogIdRouteImport; parentRoute: typeof rootRouteImport }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AdminFeedRoute: AdminFeedRoute,
-  AuthRoute: AuthRoute,
-  IdentifyRoute: IdentifyRoute,
-  MyFarmsRoute: MyFarmsRoute,
-  ReviewRoute: ReviewRoute,
-  LogLogIdRoute: LogLogIdRoute,
+  IndexRoute,
+  AdminFeedRoute,
+  AuthRoute,
+  ChatRoute,
+  IdentifyRoute,
+  MyFarmsRoute,
+  ReviewRoute,
+  LogLogIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
