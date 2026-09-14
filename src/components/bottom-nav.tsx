@@ -10,7 +10,7 @@ export function BottomNav() {
 
   return (
     <nav id="community-bottom-nav" className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/98 backdrop-blur shadow-[0_-2px_12px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]">
-      <div className="mx-auto flex h-16 max-w-2xl items-stretch px-1">
+      <div className="mx-auto flex h-20 max-w-2xl items-stretch px-1">
         <UpdateComposer
           trigger={
             <button type="button" className={`${itemClass} text-primary`} aria-label="Post">
