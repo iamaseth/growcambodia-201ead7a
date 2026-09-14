@@ -11,8 +11,6 @@ export const Route = createFileRoute("/identify")({
   component: IdentifyPlantPage,
 });
 
-type IdentifyResult = Awaited<ReturnType<ReturnType<typeof useServerFn<typeof identifyPlant>>>>;
-
 async function fileToDataUrl(file: File) {
   const compressed = await imageCompression(file, {
     maxSizeMB: 1.2,
