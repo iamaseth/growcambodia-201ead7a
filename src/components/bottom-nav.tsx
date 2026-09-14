@@ -29,20 +29,17 @@ export function BottomNav() {
             <span>Post</span>
           </button>
         )}
-
         <Link to="/identify" className={`${itemClass} ${active("/identify") ? "text-primary" : ""}`} aria-label="Identify plant">
           <Camera className="h-5 w-5" />
           <span>Identify</span>
         </Link>
-
         <Link to="/" className={`${itemClass} ${active("/") ? "text-primary" : ""}`} aria-label="Community feed">
           <Home className="h-5 w-5" />
           <span>Feed</span>
         </Link>
-
-        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Chat with admin">
+        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Help us grow">
           <MessageCircle className="h-5 w-5" />
-          <span>Chat Admin</span>
+          <span>Help Us Grow</span>
         </Link>
       </div>
     </nav>
