@@ -77,6 +77,11 @@ function Home() {
             <Sprout className="h-5 w-5" /> Grow Cambodia
           </Link>
           <div className="flex items-center gap-1">
+            <Link to="/library">
+              <Button variant="ghost" size="sm">
+                <BookOpen className="h-4 w-4 mr-1" /> Library
+              </Button>
+            </Link>
             {user && (
               <>
                 <Link to="/my-farms">
