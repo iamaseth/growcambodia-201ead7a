@@ -10,6 +10,8 @@ type Analysis = {
   confidence: number;
 };
 
+const PHOTO_BUCKET = "crop-photos";
+
 export const analyzeUpdate = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: { updateId: string }) => {
@@ -44,11 +46,44 @@ export const analyzeUpdate = createServerFn({ method: "POST" })
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI unavailable");
 
-    const prompt = `You are an agronomist for smallholder farmers in tropical Southeast Asia (Cambodia).
-Analyze this crop update and return STRICT JSON with keys:
-- observation (string, 1-2 sentences)
+    const storedImages: string[] = Array.isArray(upd.image_urls) ? upd.image_urls.filter(Boolean) : [];
+    const imageUrls: string[] = [];
+    const pathsToSign: string[] = [];
+    const signedIndexes: number[] = [];
+
+    for (const entry of storedImages.slice(0, 4)) {
+      if (/^https?:\/\//i.test(entry)) {
+        imageUrls.push(entry);
+      } else {
+        signedIndexes.push(imageUrls.length);
+        pathsToSign.push(entry);
+        imageUrls.push("");
+      }
+    }
+
+    if (pathsToSign.length) {
+      const { data: signed, error: signErr } = await supabase.storage
+        .from(PHOTO_BUCKET)
+        .createSignedUrls(pathsToSign, 60 * 10);
+      if (signErr) throw new Error(`Could not prepare photos for AI analysis: ${signErr.message}`);
+
+      (signed ?? []).forEach((row, i) => {
+        const idx = signedIndexes[i];
+        if (idx !== undefined && row?.signedUrl) imageUrls[idx] = row.signedUrl;
+      });
+    }
+
+    const usableImageUrls = imageUrls.filter(Boolean);
+
+    const prompt = `You are an agronomist helping home growers and smallholder farmers in Cambodia.
+Analyze the crop update using BOTH the written context and the attached plant photos when available.
+Do not claim a disease, pest, deficiency, or treatment is certain from a photo alone. Distinguish visible observations from possible causes and lower confidence when the image is unclear or evidence is limited.
+Keep recommendations practical for Cambodia's tropical conditions and appropriate to the crop and growth stage.
+
+Return STRICT JSON with keys:
+- observation (string, 1-2 sentences; state what is visibly observable when photos are present)
 - suggestions (array of 2-4 short strings)
-- problems (array of 0-3 short strings, likely issues)
+- problems (array of 0-3 short strings, possible issues only)
 - watch (array of 1-3 short strings, things to monitor next)
 - next_action (string, one concrete recommended action)
 - confidence (number 0-1)
@@ -59,16 +94,24 @@ Growth stage: ${upd.growth_stage}
 Age: ${log?.estimated_age_years ?? "unknown"} years
 Farm: ${farm?.name ?? "-"} (${farm?.lat ?? ""}, ${farm?.lng ?? ""})
 Farmer notes: ${upd.notes || "(none)"}
-Photos attached: ${upd.image_urls?.length ?? 0}
+Photos attached for visual analysis: ${usableImageUrls.length}
 
 Reply with JSON only.`;
+
+    const messageContent: any[] = [{ type: "text", text: prompt }];
+    for (const url of usableImageUrls) {
+      messageContent.push({
+        type: "image_url",
+        image_url: { url },
+      });
+    }
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${apiKey}` },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
-        messages: [{ role: "user", content: prompt }],
+        messages: [{ role: "user", content: messageContent }],
         response_format: { type: "json_object" },
       }),
     });
