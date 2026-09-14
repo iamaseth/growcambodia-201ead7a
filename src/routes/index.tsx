@@ -14,6 +14,7 @@ import { VisitsPanel } from "@/components/visits-panel";
 import { NextVisitBadge } from "@/components/next-visit-badge";
 import { FarmTeamPanel } from "@/components/farm-team-panel";
 import { MyCropsPanel } from "@/components/my-crops-panel";
+import { CommunityAdminFeed } from "@/components/community-admin-feed";
 import { fetchFarms, fetchFeed, fetchLogsForFarm, updateFarmLocation, type Farm } from "@/lib/db";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
@@ -159,6 +160,8 @@ function Home() {
                 );
               })}
             </div>
+
+            <CommunityAdminFeed />
 
             {feedQ.isLoading && <p className="text-sm text-muted-foreground text-center py-8">Loading updates…</p>}
             {!feedQ.isLoading && feedQ.data && feedQ.data.length === 0 && (
@@ -310,4 +313,3 @@ function FarmDetail({ farm, onClose }: { farm: Farm; onClose: () => void }) {
     </Card>
   );
 }
-
