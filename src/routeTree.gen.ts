@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as MyFarmsRouteImport } from './routes/my-farms'
+import { Route as IdentifyRouteImport } from './routes/identify'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LogLogIdRouteImport } from './routes/log.$logId'
@@ -23,6 +24,11 @@ const ReviewRoute = ReviewRouteImport.update({
 const MyFarmsRoute = MyFarmsRouteImport.update({
   id: '/my-farms',
   path: '/my-farms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IdentifyRoute = IdentifyRouteImport.update({
+  id: '/identify',
+  path: '/identify',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -44,6 +50,7 @@ const LogLogIdRoute = LogLogIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
   '/review': typeof ReviewRoute
   '/log/$logId': typeof LogLogIdRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
   '/review': typeof ReviewRoute
   '/log/$logId': typeof LogLogIdRoute
@@ -59,21 +67,23 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
   '/review': typeof ReviewRoute
   '/log/$logId': typeof LogLogIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/my-farms' | '/review' | '/log/$logId'
+  fullPaths: '/' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/my-farms' | '/review' | '/log/$logId'
-  id: '__root__' | '/' | '/auth' | '/my-farms' | '/review' | '/log/$logId'
+  to: '/' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  id: '__root__' | '/' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  IdentifyRoute: typeof IdentifyRoute
   MyFarmsRoute: typeof MyFarmsRoute
   ReviewRoute: typeof ReviewRoute
   LogLogIdRoute: typeof LogLogIdRoute
@@ -93,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/my-farms'
       fullPath: '/my-farms'
       preLoaderRoute: typeof MyFarmsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/identify': {
+      id: '/identify'
+      path: '/identify'
+      fullPath: '/identify'
+      preLoaderRoute: typeof IdentifyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -122,6 +139,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  IdentifyRoute: IdentifyRoute,
   MyFarmsRoute: MyFarmsRoute,
   ReviewRoute: ReviewRoute,
   LogLogIdRoute: LogLogIdRoute,
