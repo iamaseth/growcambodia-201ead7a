@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as MyFarmsRouteImport } from './routes/my-farms'
 import { Route as IdentifyRouteImport } from './routes/identify'
+import { Route as AdminFeedRouteImport } from './routes/admin-feed'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LogLogIdRouteImport } from './routes/log.$logId'
@@ -29,6 +30,11 @@ const MyFarmsRoute = MyFarmsRouteImport.update({
 const IdentifyRoute = IdentifyRouteImport.update({
   id: '/identify',
   path: '/identify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFeedRoute = AdminFeedRouteImport.update({
+  id: '/admin-feed',
+  path: '/admin-feed',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -49,6 +55,7 @@ const LogLogIdRoute = LogLogIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin-feed': typeof AdminFeedRoute
   '/auth': typeof AuthRoute
   '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin-feed': typeof AdminFeedRoute
   '/auth': typeof AuthRoute
   '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin-feed': typeof AdminFeedRoute
   '/auth': typeof AuthRoute
   '/identify': typeof IdentifyRoute
   '/my-farms': typeof MyFarmsRoute
@@ -74,14 +83,15 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  fullPaths: '/' | '/admin-feed' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
-  id: '__root__' | '/' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  to: '/' | '/admin-feed' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
+  id: '__root__' | '/' | '/admin-feed' | '/auth' | '/identify' | '/my-farms' | '/review' | '/log/$logId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminFeedRoute: typeof AdminFeedRoute
   AuthRoute: typeof AuthRoute
   IdentifyRoute: typeof IdentifyRoute
   MyFarmsRoute: typeof MyFarmsRoute
@@ -112,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IdentifyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin-feed': {
+      id: '/admin-feed'
+      path: '/admin-feed'
+      fullPath: '/admin-feed'
+      preLoaderRoute: typeof AdminFeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -138,6 +155,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminFeedRoute: AdminFeedRoute,
   AuthRoute: AuthRoute,
   IdentifyRoute: IdentifyRoute,
   MyFarmsRoute: MyFarmsRoute,
