@@ -25,7 +25,8 @@ function parseDataUrl(dataUrl: string) {
   const match = dataUrl.match(/^data:(image\/(?:jpeg|png|webp));base64,(.+)$/i);
   if (!match) throw new Error("Please upload a JPG, PNG, or WebP plant photo");
   const mime = match[1].toLowerCase();
-  const bytes = Uint8Array.from(Buffer.from(match[2], "base64"));
+  const binary = atob(match[2]);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
   if (bytes.byteLength > 6 * 1024 * 1024) throw new Error("Photo is too large after compression");
   return { mime, bytes };
 }
