@@ -2,10 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import imageCompression from "browser-image-compression";
-import { ArrowLeft, Camera, CheckCircle2, ExternalLink, Leaf, Loader2, RotateCcw, Sprout } from "lucide-react";
+import { ArrowLeft, Camera, CheckCircle2, ExternalLink, Leaf, Loader2, MapPin, RotateCcw, Sprout } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { identifyPlant } from "@/lib/identify-plant.functions";
+import { useAuth } from "@/hooks/use-auth";
+import { compressAndUploadPhotos } from "@/lib/photo";
+import { savePlantIdentification } from "@/lib/plant-identifications";
 
 export const Route = createFileRoute("/identify")({
   component: IdentifyPlantPage,
@@ -26,23 +29,68 @@ async function fileToDataUrl(file: File) {
   });
 }
 
+async function getCurrentPlantLocation() {
+  if (typeof navigator === "undefined" || !navigator.geolocation) return null;
+  return await new Promise<{ latitude: number; longitude: number; accuracy: number } | null>((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      (p) => resolve({ latitude: p.coords.latitude, longitude: p.coords.longitude, accuracy: p.coords.accuracy }),
+      () => resolve(null),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 },
+    );
+  });
+}
+
 function IdentifyPlantPage() {
+  const { user } = useAuth();
   const identifyFn = useServerFn(identifyPlant);
   const [preview, setPreview] = useState<string | null>(null);
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
+  const [savedWithGps, setSavedWithGps] = useState(false);
 
   const onPhoto = async (file?: File) => {
     if (!file) return;
     setLoading(true);
     setError(null);
     setResult(null);
+    setSaved(false);
+    setSavedWithGps(false);
     try {
       const imageDataUrl = await fileToDataUrl(file);
       setPreview(imageDataUrl);
+
+      const locationPromise = user ? getCurrentPlantLocation() : Promise.resolve(null);
+      const uploadPromise = user
+        ? compressAndUploadPhotos([file], user.id).catch(() => [] as string[])
+        : Promise.resolve([] as string[]);
+
       const identified = await identifyFn({ data: { imageDataUrl } });
       setResult(identified);
+
+      if (user) {
+        const [location, uploaded] = await Promise.all([locationPromise, uploadPromise]);
+        const plant = identified?.identification ?? {};
+        const confidence = typeof plant.confidence === "number" ? plant.confidence : null;
+        const hasUsefulId = Boolean(plant.commonName || plant.scientificName);
+
+        await savePlantIdentification({
+          user_id: user.id,
+          image_path: uploaded[0] ?? null,
+          common_name: plant.commonName ?? null,
+          scientific_name: plant.scientificName ?? null,
+          confidence,
+          identification_source: identified?.source === "plantnet" ? "database" : "ai",
+          status: hasUsefulId && (confidence == null || confidence >= 0.55) ? "identified" : "needs_help",
+          latitude: location?.latitude ?? null,
+          longitude: location?.longitude ?? null,
+          location_accuracy_m: location?.accuracy ?? null,
+          result_json: identified,
+        });
+        setSaved(true);
+        setSavedWithGps(Boolean(location));
+      }
     } catch (e: any) {
       setError(e?.message ?? "Could not identify this plant");
     } finally {
@@ -54,10 +102,12 @@ function IdentifyPlantPage() {
     setPreview(null);
     setResult(null);
     setError(null);
+    setSaved(false);
+    setSavedWithGps(false);
   };
 
   return (
-    <div className="min-h-screen bg-background pb-12">
+    <div className="min-h-screen bg-background pb-24">
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
         <div className="max-w-2xl mx-auto h-14 px-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 text-sm font-medium">
@@ -73,7 +123,7 @@ function IdentifyPlantPage() {
         <div className="space-y-1">
           <h1 className="text-2xl font-bold">What plant is this?</h1>
           <p className="text-sm text-muted-foreground">
-            Take a clear photo. We identify the plant, verify its scientific name, then show Cambodia-focused growing guidance when available.
+            Take a clear photo. We identify the plant, verify its scientific name, and save the result with GPS when you are signed in and location permission is available.
           </p>
         </div>
 
@@ -118,7 +168,7 @@ function IdentifyPlantPage() {
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
             <div>
               <p className="font-medium text-sm">Identifying plant…</p>
-              <p className="text-xs text-muted-foreground">Checking the photo, taxonomy, and Cambodia growing context.</p>
+              <p className="text-xs text-muted-foreground">Checking the photo, taxonomy, Cambodia context, and location.</p>
             </div>
           </Card>
         )}
@@ -128,6 +178,19 @@ function IdentifyPlantPage() {
             <p className="font-medium text-sm text-destructive">Identification failed</p>
             <p className="text-sm mt-1">{error}</p>
             <p className="text-xs text-muted-foreground mt-2">Try a closer, brighter photo showing leaves, flowers, fruit, or bark.</p>
+          </Card>
+        )}
+
+        {saved && (
+          <Card className="p-4 flex gap-3 items-start border-primary/30 bg-primary/5">
+            <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
+            <div>
+              <p className="font-medium text-sm">Saved to your plant identification history</p>
+              <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                {savedWithGps ? "GPS location saved with this identification." : "Location unavailable; the identification was still saved."}
+              </p>
+            </div>
           </Card>
         )}
 
