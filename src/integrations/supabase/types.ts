@@ -14,6 +14,188 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_feed_posts: {
+        Row: {
+          active: boolean
+          body: string
+          created_at: string
+          created_by: string
+          ends_at: string | null
+          featured: boolean
+          id: string
+          image_url: string | null
+          link_url: string | null
+          location_text: string | null
+          pinned: boolean
+          post_type: string
+          starts_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          body?: string
+          created_at?: string
+          created_by: string
+          ends_at?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          location_text?: string | null
+          pinned?: boolean
+          post_type: string
+          starts_at?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          created_at?: string
+          created_by?: string
+          ends_at?: string | null
+          featured?: boolean
+          id?: string
+          image_url?: string | null
+          link_url?: string | null
+          location_text?: string | null
+          pinned?: boolean
+          post_type?: string
+          starts_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      admin_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          sender_id: string
+          sender_role: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          sender_id: string
+          sender_role: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          sender_id?: string
+          sender_role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_knowledge_contributions: {
+        Row: {
+          body: string
+          contribution_type: string
+          created_at: string
+          entry_id: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          contribution_type: string
+          created_at?: string
+          entry_id: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          contribution_type?: string
+          created_at?: string
+          entry_id?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_knowledge_contributions_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "community_knowledge_library"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_knowledge_library: {
+        Row: {
+          common_name: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          edible_parts: string[] | null
+          entry_type: string
+          id: string
+          khmer_name: string | null
+          preparation_notes: string | null
+          region_text: string | null
+          safety_warning: string | null
+          scientific_name: string | null
+          season_text: string | null
+          source_title: string | null
+          source_url: string | null
+          traditional_uses: string[] | null
+          updated_at: string
+          verification_status: string
+        }
+        Insert: {
+          common_name: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          edible_parts?: string[] | null
+          entry_type: string
+          id?: string
+          khmer_name?: string | null
+          preparation_notes?: string | null
+          region_text?: string | null
+          safety_warning?: string | null
+          scientific_name?: string | null
+          season_text?: string | null
+          source_title?: string | null
+          source_url?: string | null
+          traditional_uses?: string[] | null
+          updated_at?: string
+          verification_status?: string
+        }
+        Update: {
+          common_name?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          edible_parts?: string[] | null
+          entry_type?: string
+          id?: string
+          khmer_name?: string | null
+          preparation_notes?: string | null
+          region_text?: string | null
+          safety_warning?: string | null
+          scientific_name?: string | null
+          season_text?: string | null
+          source_title?: string | null
+          source_url?: string | null
+          traditional_uses?: string[] | null
+          updated_at?: string
+          verification_status?: string
+        }
+        Relationships: []
+      }
       crop_knowledge: {
         Row: {
           created_at: string
@@ -268,6 +450,57 @@ export type Database = {
         }
         Relationships: []
       }
+      plant_identifications: {
+        Row: {
+          common_name: string | null
+          confidence: number | null
+          created_at: string
+          id: string
+          identification_source: string
+          image_path: string | null
+          latitude: number | null
+          location_accuracy_m: number | null
+          longitude: number | null
+          result_json: Json | null
+          scientific_name: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          common_name?: string | null
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          identification_source?: string
+          image_path?: string | null
+          latitude?: number | null
+          location_accuracy_m?: number | null
+          longitude?: number | null
+          result_json?: Json | null
+          scientific_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          common_name?: string | null
+          confidence?: number | null
+          created_at?: string
+          id?: string
+          identification_source?: string
+          image_path?: string | null
+          latitude?: number | null
+          location_accuracy_m?: number | null
+          longitude?: number | null
+          result_json?: Json | null
+          scientific_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       plant_logs: {
         Row: {
           area_unit: string | null
@@ -333,6 +566,50 @@ export type Database = {
           },
         ]
       }
+      post_reports: {
+        Row: {
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          update_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          update_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          update_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_reports_update_id_fkey"
+            columns: ["update_id"]
+            isOneToOne: false
+            referencedRelation: "timeline_updates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -356,33 +633,39 @@ export type Database = {
       }
       timeline_updates: {
         Row: {
+          ai_thread_public: boolean
           created_at: string
           growth_stage: string
           id: string
           image_urls: string[]
           likes: number
-          log_id: string
+          log_id: string | null
           notes: string | null
+          post_type: string
           user_id: string
         }
         Insert: {
+          ai_thread_public?: boolean
           created_at?: string
           growth_stage: string
           id?: string
           image_urls?: string[]
           likes?: number
-          log_id: string
+          log_id?: string | null
           notes?: string | null
+          post_type?: string
           user_id: string
         }
         Update: {
+          ai_thread_public?: boolean
           created_at?: string
           growth_stage?: string
           id?: string
           image_urls?: string[]
           likes?: number
-          log_id?: string
+          log_id?: string | null
           notes?: string | null
+          post_type?: string
           user_id?: string
         }
         Relationships: [
@@ -556,12 +839,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -585,11 +868,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -610,11 +893,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -635,11 +918,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -652,11 +935,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

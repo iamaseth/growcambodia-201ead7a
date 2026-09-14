@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Sprout, Map as MapIcon, Rss, LogIn, LogOut, CalendarIcon, CalendarClock } from "lucide-react";
+import { Sprout, Map as MapIcon, Rss, LogIn, LogOut, CalendarIcon, CalendarClock, BookOpen } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -77,6 +77,11 @@ function Home() {
             <Sprout className="h-5 w-5" /> Grow Cambodia
           </Link>
           <div className="flex items-center gap-1">
+            <Link to="/library">
+              <Button variant="ghost" size="sm">
+                <BookOpen className="h-4 w-4 mr-1" /> Library
+              </Button>
+            </Link>
             {user && (
               <>
                 <Link to="/my-farms">

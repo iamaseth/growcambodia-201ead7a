@@ -81,7 +81,7 @@ function IdentifyPlantPage() {
           common_name: plant.commonName ?? null,
           scientific_name: plant.scientificName ?? null,
           confidence,
-          identification_source: identified?.source === "plantnet" ? "database" : "ai",
+          identification_source: identified?.provider === "plantnet" ? "database" : "ai",
           status: hasUsefulId && (confidence == null || confidence >= 0.55) ? "identified" : "needs_help",
           latitude: location?.latitude ?? null,
           longitude: location?.longitude ?? null,
