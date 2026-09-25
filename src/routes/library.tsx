@@ -184,7 +184,11 @@ function EntryDetail({ entry }: { entry: LibraryEntry }) {
         </div>
       )}
 
-      {entry.featured_reason && <Field label="Why this plant matters">{entry.featured_reason}</Field>}{entry.nutrition_tags?.length ? <Field label="Nutrition highlights"><div className="flex flex-wrap gap-1">{entry.nutrition_tags.map(t=><Badge key={t} variant="secondary">{t}</Badge>)}</div></Field> : null}{entry.use_tags?.length ? <Field label="Useful for"><div className="flex flex-wrap gap-1">{entry.use_tags.map(t=><Badge key={t} variant="outline">{t}</Badge>)}</div></Field> : null}{entry.local_opportunity && <Field label="Local opportunity">{entry.local_opportunity}</Field>}{entry.description && <Field label="Description">{entry.description}</Field>}
+      {entry.featured_reason && <Field label="Why this plant matters">{entry.featured_reason}</Field>}
+      {entry.nutrition_summary && <Field label="Nutrition — vitamins, minerals, protein & more">{entry.nutrition_summary}</Field>}
+      {entry.health_research_summary && <Field label="Health research">{entry.health_research_summary}</Field>}
+      {entry.evidence_level && <Field label="Strength of evidence"><Badge variant="secondary">{entry.evidence_level}</Badge></Field>}
+      {entry.evidence_summary && <Field label="What the evidence means">{entry.evidence_summary}</Field>}{entry.nutrition_tags?.length ? <Field label="Nutrition highlights"><div className="flex flex-wrap gap-1">{entry.nutrition_tags.map(t=><Badge key={t} variant="secondary">{t}</Badge>)}</div></Field> : null}{entry.use_tags?.length ? <Field label="Useful for"><div className="flex flex-wrap gap-1">{entry.use_tags.map(t=><Badge key={t} variant="outline">{t}</Badge>)}</div></Field> : null}{entry.local_opportunity && <Field label="Local opportunity">{entry.local_opportunity}</Field>}{entry.description && <Field label="Description">{entry.description}</Field>}
       {entry.edible_parts?.length ? <Field label="Edible parts">{entry.edible_parts.join(", ")}</Field> : null}
       {entry.traditional_uses?.length ? (
         <Field label="Traditional / local uses">
@@ -201,6 +205,7 @@ function EntryDetail({ entry }: { entry: LibraryEntry }) {
       {entry.region_text && (
         <Field label="Where in Cambodia"><span className="inline-flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{entry.region_text}</span></Field>
       )}
+      {entry.research_sources?.length ? <Field label="Research sources"><div className="space-y-1">{entry.research_sources.map((s,i)=><a key={i} href={s.url} target="_blank" rel="noreferrer" className="text-primary flex items-start gap-1">{s.title}<ExternalLink className="h-3 w-3 shrink-0 mt-1" /></a>)}</div></Field> : null}
       {entry.source_url && (
         <Field label="Source">
           <a href={entry.source_url} target="_blank" rel="noreferrer" className="text-primary inline-flex items-center gap-1 break-all">
