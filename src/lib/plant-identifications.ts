@@ -35,3 +35,43 @@ export async function linkIdentificationToLibrary(id: string, userId: string, li
   const { error } = await supabase.from("plant_identifications").update({ library_entry_id: libraryEntryId }).eq("id", id).eq("user_id", userId);
   if (error) throw error;
 }
+
+
+export type PlantObservation = {
+  id: string;
+  identification_id: string;
+  user_id: string;
+  observation_type: "note" | "photo" | "community_suggestion" | "expert_comment" | "correction" | "harvest" | "outcome";
+  body: string | null;
+  image_path: string | null;
+  suggested_common_name: string | null;
+  suggested_scientific_name: string | null;
+  accepted: boolean;
+  created_at: string;
+};
+
+export async function fetchPlantIdentification(id: string) {
+  const { data, error } = await supabase.from("plant_identifications").select("*").eq("id", id).single();
+  if (error) throw error;
+  return data as unknown as SavedPlantIdentification;
+}
+
+export async function fetchPlantObservations(identificationId: string) {
+  const { data, error } = await supabase.from("plant_identification_observations").select("*").eq("identification_id", identificationId).order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as PlantObservation[];
+}
+
+export async function addPlantObservation(input: {
+  identification_id: string;
+  user_id: string;
+  observation_type: PlantObservation["observation_type"];
+  body?: string | null;
+  image_path?: string | null;
+  suggested_common_name?: string | null;
+  suggested_scientific_name?: string | null;
+}) {
+  const { data, error } = await supabase.from("plant_identification_observations").insert(input).select("*").single();
+  if (error) throw error;
+  return data as unknown as PlantObservation;
+}
