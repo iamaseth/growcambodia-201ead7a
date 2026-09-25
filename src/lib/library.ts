@@ -8,7 +8,7 @@ export type LibraryEntry = {
   traditional_uses: string[] | null; preparation_notes: string | null; safety_warning: string | null;
   region_text: string | null; season_text: string | null; source_url: string | null;
   source_title: string | null; verification_status: string; created_by: string | null;
-  created_at: string; updated_at: string;
+  created_at: string; updated_at: string;\n  highlight_priority?: number; nutrition_tags?: string[]; use_tags?: string[]; evidence_summary?: string | null;\n  local_opportunity?: string | null; featured_area?: string | null; featured_reason?: string | null;
 };
 
 export type LibraryContribution = {

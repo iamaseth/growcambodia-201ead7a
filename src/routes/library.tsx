@@ -51,7 +51,7 @@ function LibraryPage() {
   const [open, setOpen] = useState<LibraryEntry | null>(null);
   const entriesQ = useQuery({ queryKey: ["library"], queryFn: fetchLibraryEntries });
 
-  const entries = useMemo(() => {
+  const featured = useMemo(() => (entriesQ.data ?? []).filter((e) => e.featured_area === "Kampot" && (e.highlight_priority ?? 0) > 0).sort((a,b) => (b.highlight_priority ?? 0) - (a.highlight_priority ?? 0)), [entriesQ.data]);\n\n  const entries = useMemo(() => {
     const term = q.trim().toLowerCase();
     return (entriesQ.data ?? []).filter((e) => {
       if (e.entry_type !== type) return false;
@@ -81,7 +81,7 @@ function LibraryPage() {
           uses are not proven treatments. Never eat or treat with a plant unless you are certain of the identification.
         </p>
 
-        <Tabs value={type} onValueChange={(v) => setType(v as LibraryEntryType)}>
+        {featured.length > 0 && <section className="space-y-2"><div><h2 className="font-bold text-lg">Kampot — Surprisingly Useful Plants</h2><p className="text-xs text-muted-foreground">Local plants worth rediscovering for food, nutrition, traditional knowledge, farming and local livelihoods.</p></div><div className="flex gap-3 overflow-x-auto pb-2">{featured.map((e)=><Card key={"featured-"+e.id} className="min-w-[260px] p-4 cursor-pointer" onClick={()=>setOpen(e)}><div className="flex justify-between gap-2"><h3 className="font-semibold">{e.common_name}</h3><Badge>Featured</Badge></div><p className="text-xs italic text-muted-foreground">{e.scientific_name}</p>{e.featured_reason&&<p className="text-sm mt-2">{e.featured_reason}</p>}<div className="flex flex-wrap gap-1 mt-2">{[...(e.nutrition_tags??[]),...(e.use_tags??[])].slice(0,5).map(t=><Badge key={t} variant="outline" className="text-[10px]">{t}</Badge>)}</div></Card>)}</div></section>}\n\n        <Tabs value={type} onValueChange={(v) => setType(v as LibraryEntryType)}>
           <TabsList className="grid w-full grid-cols-3">
             {TYPES.map((t) => (
               <TabsTrigger key={t} value={t} className="text-xs">{ENTRY_TYPE_LABELS[t]}</TabsTrigger>
@@ -184,7 +184,7 @@ function EntryDetail({ entry }: { entry: LibraryEntry }) {
         </div>
       )}
 
-      {entry.description && <Field label="Description">{entry.description}</Field>}
+      {entry.featured_reason && <Field label="Why this plant matters">{entry.featured_reason}</Field>}{entry.nutrition_tags?.length ? <Field label="Nutrition highlights"><div className="flex flex-wrap gap-1">{entry.nutrition_tags.map(t=><Badge key={t} variant="secondary">{t}</Badge>)}</div></Field> : null}{entry.use_tags?.length ? <Field label="Useful for"><div className="flex flex-wrap gap-1">{entry.use_tags.map(t=><Badge key={t} variant="outline">{t}</Badge>)}</div></Field> : null}{entry.local_opportunity && <Field label="Local opportunity">{entry.local_opportunity}</Field>}{entry.description && <Field label="Description">{entry.description}</Field>}
       {entry.edible_parts?.length ? <Field label="Edible parts">{entry.edible_parts.join(", ")}</Field> : null}
       {entry.traditional_uses?.length ? (
         <Field label="Traditional / local uses">
