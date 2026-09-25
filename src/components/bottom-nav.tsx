@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Camera, Home, MessageCircle, Plus } from "lucide-react";
+import { Camera, Home, MessageCircle, Plus, Leaf } from "lucide-react";
 import { UpdateComposer } from "@/components/update-composer";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -20,7 +20,7 @@ export function BottomNav() {
 
   return (
     <nav id="community-bottom-nav" className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/98 backdrop-blur shadow-[0_-2px_12px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]">
-      <div className="mx-auto grid h-20 max-w-2xl grid-cols-4 px-1">
+      <div className="mx-auto grid h-20 max-w-2xl grid-cols-5 px-1">
         {user ? (
           <UpdateComposer trigger={postTrigger} />
         ) : (
@@ -37,7 +37,7 @@ export function BottomNav() {
           <Home className="h-5 w-5" />
           <span>Feed</span>
         </Link>
-        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Help us grow">
+        <Link to="/my-plants" className={`${itemClass} ${active("/my-plants") ? "text-primary" : ""}`} aria-label="My plants"><Leaf className="h-5 w-5" /><span>My Plants</span></Link>\n        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Help us grow">
           <MessageCircle className="h-5 w-5" />
           <span>Help Us Grow</span>
         </Link>
