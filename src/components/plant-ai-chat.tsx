@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
+import { fetchPlantChat, savePlantChatMessage } from "@/lib/plant-chat-storage";
 import { useServerFn } from "@tanstack/react-start";
 import { Bot, Loader2, Send, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +10,21 @@ import { askPlantAI } from "@/lib/plant-chat.functions";
 
 type Message = { role: "user" | "assistant"; content: string };
 
-export function PlantAIChat({ plantContext }: { plantContext: any }) {
+export function PlantAIChat({ plantContext, identificationId }: { plantContext: any; identificationId?: string | null }) {
+  const { user } = useAuth();
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyReady, setHistoryReady] = useState(false);
+  useEffect(() => {
+    let active = true;
+    setMessages([]); setError(null); setHistoryReady(false);
+    if (!identificationId || !user) { setHistoryReady(true); return; }
+    setHistoryLoading(true);
+    fetchPlantChat(identificationId).then(rows => {
+      if (active) setMessages(rows.map(({ role, content }) => ({ role, content })));
+    }).catch(e => { if (active) setError(e?.message ?? "Could not load saved conversation"); })
+      .finally(() => { if (active) { setHistoryLoading(false); setHistoryReady(true); } });
+    return () => { active = false; };
+  }, [identificationId, user?.id]);
   const askFn = useServerFn(askPlantAI);
   const [messages, setMessages] = useState<Message[]>([]);
   const [question, setQuestion] = useState("");
@@ -17,14 +33,16 @@ export function PlantAIChat({ plantContext }: { plantContext: any }) {
 
   const send = async (preset?: string) => {
     const text = (preset ?? question).trim();
-    if (!text || loading) return;
+    if (!text || loading || !historyReady) return;
     const next: Message[] = [...messages, { role: "user", content: text }];
     setMessages(next);
     setQuestion("");
     setLoading(true);
     setError(null);
     try {
+      if (identificationId && user) await savePlantChatMessage(identificationId, user.id, "user", text);
       const answer = await askFn({ data: { plant: plantContext, messages: next } });
+      if (identificationId && user) await savePlantChatMessage(identificationId, user.id, "assistant", answer.content);
       setMessages([...next, { role: "assistant", content: answer.content }]);
     } catch (e: any) {
       setError(e?.message ?? "Could not answer that question");
@@ -40,11 +58,12 @@ export function PlantAIChat({ plantContext }: { plantContext: any }) {
         <div>
           <p className="text-xs font-medium uppercase tracking-wide text-primary">Ask about this plant</p>
           <h3 className="font-semibold text-lg">Continue with AI</h3>
-          <p className="text-xs text-muted-foreground mt-1">I remember this identification and our conversation. Ask about propagation, care, problems, pruning, soil, or growing it in Cambodia.</p>
+          <p className="text-xs text-muted-foreground mt-1">Ask about propagation, care, problems, pruning, soil, or growing it in Cambodia. {identificationId && user ? "This conversation is saved privately to your plant." : "Sign in and save an identification to keep this conversation after leaving the page."}</p>
         </div>
       </div>
 
-      {messages.length === 0 && (
+      {historyLoading && <p className="text-xs text-muted-foreground">Loading saved conversation…</p>}
+      {messages.length === 0 && historyReady && (
         <div className="flex gap-2 overflow-x-auto pb-1">
           {["Can I grow this from a stem?", "How should I care for it in Cambodia?", "What problems should I watch for?"].map((q) => (
             <button key={q} onClick={() => send(q)} className="shrink-0 rounded-full border px-3 py-2 text-xs hover:bg-muted">{q}</button>
@@ -64,7 +83,7 @@ export function PlantAIChat({ plantContext }: { plantContext: any }) {
       {error && <p className="text-xs text-destructive">{error}</p>}
       <div className="flex gap-2 items-end">
         <Textarea value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Ask a follow-up question…" rows={2} maxLength={1500} onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }} />
-        <Button size="icon" onClick={() => send()} disabled={loading || !question.trim()} aria-label="Ask plant AI">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}</Button>
+        <Button size="icon" onClick={() => send()} disabled={loading || !historyReady || !question.trim()} aria-label="Ask plant AI">{loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}</Button>
       </div>
     </Card>
   );
