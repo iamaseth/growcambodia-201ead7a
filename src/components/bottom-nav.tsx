@@ -1,47 +1,27 @@
-import { Link, useLocation, useNavigate } from "@tanstack/react-router";
-import { Camera, Home, MessageCircle, Plus, Leaf } from "lucide-react";
-import { UpdateComposer } from "@/components/update-composer";
-import { useAuth } from "@/hooks/use-auth";
+import { Link, useLocation } from "@tanstack/react-router";
+import { BookOpen, Camera, MessageCircle, NotebookPen, Users } from "lucide-react";
 
-const itemClass = "flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 py-2 text-[11px] font-medium text-muted-foreground transition hover:text-primary";
+const itemClass = "flex min-w-0 flex-1 flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium text-muted-foreground transition hover:text-primary";
 
 export function BottomNav() {
   const location = useLocation();
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const active = (path: string) => location.pathname === path;
-
-  const postTrigger = (
-    <button type="button" className={itemClass} aria-label="Post">
-      <Plus className="h-5 w-5" />
-      <span>Post</span>
-    </button>
-  );
+  const items = [
+    { to: "/", label: "Community", icon: Users },
+    { to: "/library", label: "Local Plants", icon: BookOpen },
+    { to: "/identify", label: "Identify", icon: Camera },
+    { to: "/my-plants", label: "Plant Diary", icon: NotebookPen },
+    { to: "/chat", label: "Help Us Grow", icon: MessageCircle },
+  ] as const;
 
   return (
-    <nav id="community-bottom-nav" className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/98 backdrop-blur shadow-[0_-2px_12px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]">
+    <nav aria-label="Grow main navigation" id="community-bottom-nav" className="fixed inset-x-0 bottom-0 z-50 border-t bg-background/98 backdrop-blur shadow-[0_-2px_12px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto grid h-20 max-w-2xl grid-cols-5 px-1">
-        {user ? (
-          <UpdateComposer trigger={postTrigger} />
-        ) : (
-          <button type="button" className={itemClass} aria-label="Post" onClick={() => navigate({ to: "/auth" })}>
-            <Plus className="h-5 w-5" />
-            <span>Post</span>
-          </button>
-        )}
-        <Link to="/identify" className={`${itemClass} ${active("/identify") ? "text-primary" : ""}`} aria-label="Identify plant">
-          <Camera className="h-5 w-5" />
-          <span>Identify</span>
-        </Link>
-        <Link to="/" className={`${itemClass} ${active("/") ? "text-primary" : ""}`} aria-label="Community feed">
-          <Home className="h-5 w-5" />
-          <span>Feed</span>
-        </Link>
-        <Link to="/my-plants" className={`${itemClass} ${active("/my-plants") ? "text-primary" : ""}`} aria-label="My plants"><Leaf className="h-5 w-5" /><span>My Plants</span></Link>
-        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Help us grow">
-          <MessageCircle className="h-5 w-5" />
-          <span>Help Us Grow</span>
-        </Link>
+        {items.map(({ to, label, icon: Icon }) => (
+          <Link key={to} to={to} aria-label={label} aria-current={location.pathname === to ? "page" : undefined} className={`${itemClass} ${location.pathname === to || (to === "/my-plants" && location.pathname.startsWith("/plant-memory/")) ? "text-primary" : ""}`}>
+            <Icon className="h-5 w-5" />
+            <span className="text-center leading-tight">{label}</span>
+          </Link>
+        ))}
       </div>
     </nav>
   );
