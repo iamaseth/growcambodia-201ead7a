@@ -44,10 +44,11 @@ function IdentifyPlantPage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [savedWithGps, setSavedWithGps] = useState(false);
+  const [savedIdentificationId, setSavedIdentificationId] = useState<string | null>(null);
 
   const onPhoto = async (file?: File) => {
     if (!file) return;
-    setLoading(true); setError(null); setResult(null); setSaved(false); setSavedWithGps(false);
+    setLoading(true); setError(null); setResult(null); setSaved(false); setSavedWithGps(false); setSavedIdentificationId(null);
     try {
       const imageDataUrl = await fileToDataUrl(file);
       setPreview(imageDataUrl);
@@ -60,7 +61,7 @@ function IdentifyPlantPage() {
         const plant = identified?.identification ?? {};
         const confidence = typeof plant.confidence === "number" ? plant.confidence : null;
         const hasUsefulId = Boolean(plant.commonName || plant.scientificName);
-        await savePlantIdentification({
+        const savedIdentification = await savePlantIdentification({
           user_id: user.id, image_path: uploaded[0] ?? null, common_name: plant.commonName ?? null,
           scientific_name: plant.scientificName ?? null, confidence,
           identification_source: identified?.provider === "plantnet" ? "database" : "ai",
@@ -68,13 +69,14 @@ function IdentifyPlantPage() {
           latitude: location?.latitude ?? null, longitude: location?.longitude ?? null,
           location_accuracy_m: location?.accuracy ?? null, result_json: identified,
         });
+        setSavedIdentificationId(savedIdentification.id);
         setSaved(true); setSavedWithGps(Boolean(location));
       }
     } catch (e: any) { setError(e?.message ?? "Could not identify this plant"); }
     finally { setLoading(false); }
   };
 
-  const reset = () => { setPreview(null); setResult(null); setError(null); setSaved(false); setSavedWithGps(false); };
+  const reset = () => { setPreview(null); setResult(null); setError(null); setSaved(false); setSavedWithGps(false); setSavedIdentificationId(null); };
 
   return <div className="min-h-screen bg-background pb-24">
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur"><div className="max-w-2xl mx-auto h-14 px-4 flex items-center justify-between">
@@ -88,12 +90,12 @@ function IdentifyPlantPage() {
       {loading && <Card className="p-6 flex items-center gap-3"><Loader2 className="h-5 w-5 animate-spin text-primary" /><div><p className="font-medium text-sm">Identifying plant…</p><p className="text-xs text-muted-foreground">Checking the photo, taxonomy, Cambodia context, and location.</p></div></Card>}
       {error && <Card className="p-4 border-destructive/40"><p className="font-medium text-sm text-destructive">Identification failed</p><p className="text-sm mt-1">{error}</p><p className="text-xs text-muted-foreground mt-2">Try a closer, brighter photo showing leaves, flowers, fruit, or bark.</p></Card>}
       {saved && <Card className="p-4 flex gap-3 items-start border-primary/30 bg-primary/5"><CheckCircle2 className="h-5 w-5 text-primary mt-0.5" /><div><p className="font-medium text-sm">Saved to your plant identification history</p><p className="text-xs text-muted-foreground mt-1 flex items-center gap-1"><MapPin className="h-3 w-3" />{savedWithGps ? "GPS location saved with this identification." : "Location unavailable; the identification was still saved."}</p></div></Card>}
-      {result && <PlantResult result={result} />}
+      {result && <PlantResult result={result} savedIdentificationId={savedIdentificationId} />}
     </main>
   </div>;
 }
 
-function PlantResult({ result }: { result: any }) {
+function PlantResult({ result, savedIdentificationId }: { result: any; savedIdentificationId: string | null }) {
   const plant = result.identification; const profile = result.cambodiaProfile; const taxonomy = result.taxonomy;
   const confidence = Math.round((plant.confidence ?? 0) * 100);
   const [knowledge, setKnowledge] = useState<LibraryEntry[]>([]);
@@ -119,7 +121,7 @@ function PlantResult({ result }: { result: any }) {
       <Link to="/library"><Button variant="outline" size="sm" className="w-full">Open Cambodia Plant Library</Button></Link>
     </Card>}
     <PlantAIChat plantContext={result} />
-    <Card className="p-4 flex items-center gap-3"><Sprout className="h-5 w-5 text-primary" /><div className="flex-1"><p className="font-medium text-sm">Growing this plant?</p><p className="text-xs text-muted-foreground">Add it to Grow Cambodia and start its photo timeline.</p></div><Link to="/"><Button size="sm">My Crops</Button></Link></Card>
+    <Card className="p-4 flex items-center gap-3"><Sprout className="h-5 w-5 text-primary" /><div className="flex-1"><p className="font-medium text-sm">Growing this plant?</p><p className="text-xs text-muted-foreground">Add it to Grow Cambodia and start its photo timeline.</p></div>{savedIdentificationId ? <Link to="/plant-memory/$id" params={{ id: savedIdentificationId }}><Button size="sm">Open saved plant</Button></Link> : <Link to="/my-plants"><Button size="sm">My Plants</Button></Link>}</Card>
   </div>;
 }
 
