@@ -30,7 +30,7 @@ function Page() {
   if (!user) return <main className="mx-auto max-w-2xl p-6 pb-28 text-center"><Leaf className="mx-auto h-10 w-10 text-primary"/><h1 className="mt-3 text-xl font-bold">Plant Diary</h1><p className="my-3 text-sm text-muted-foreground">Sign in to keep your private plant history.</p><Link to="/auth"><Button>Sign in</Button></Link></main>;
   const entries = [
     ...(plants.data ?? []).map(p => ({ kind: "identification" as const, id: p.id, date: p.created_at, plant: p })),
-    ...(observations.data ?? []).map(o => ({ kind: "observation" as const, id: o.id, date: o.created_at, observation: o })),
+    ...(observations.data ?? []).map(o => ({ kind: "observation" as const, id: o.id, date: o.created_at, plant: o.plant, observation: o })),
   ].sort((a, b) => b.date.localeCompare(a.date));
   return <main className="mx-auto max-w-2xl space-y-4 p-4 pb-28">
     <h1 className="text-xl font-bold">My Plant Diary</h1>
