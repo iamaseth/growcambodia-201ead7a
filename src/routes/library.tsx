@@ -51,7 +51,9 @@ function LibraryPage() {
   const [open, setOpen] = useState<LibraryEntry | null>(null);
   const entriesQ = useQuery({ queryKey: ["library"], queryFn: fetchLibraryEntries });
 
-  const featured = useMemo(() => (entriesQ.data ?? []).filter((e) => e.featured_area === "Kampot" && (e.highlight_priority ?? 0) > 0).sort((a,b) => (b.highlight_priority ?? 0) - (a.highlight_priority ?? 0)), [entriesQ.data]);\n\n  const entries = useMemo(() => {
+  const featured = useMemo(() => (entriesQ.data ?? []).filter((e) => e.featured_area === "Kampot" && (e.highlight_priority ?? 0) > 0).sort((a,b) => (b.highlight_priority ?? 0) - (a.highlight_priority ?? 0)), [entriesQ.data]);
+
+  const entries = useMemo(() => {
     const term = q.trim().toLowerCase();
     return (entriesQ.data ?? []).filter((e) => {
       if (e.entry_type !== type) return false;
