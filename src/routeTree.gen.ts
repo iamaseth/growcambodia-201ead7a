@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ReviewRouteImport } from './routes/review'
+import { Route as MyPlantsRouteImport } from './routes/my-plants'
 import { Route as MyFarmsRouteImport } from './routes/my-farms'
 import { Route as LibraryRouteImport } from './routes/library'
 import { Route as IdentifyRouteImport } from './routes/identify'
@@ -17,11 +18,17 @@ import { Route as ChatRouteImport } from './routes/chat'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminFeedRouteImport } from './routes/admin-feed'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PlantMemoryIdRouteImport } from './routes/plant-memory.$id'
 import { Route as LogLogIdRouteImport } from './routes/log.$logId'
 
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MyPlantsRoute = MyPlantsRouteImport.update({
+  id: '/my-plants',
+  path: '/my-plants',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MyFarmsRoute = MyFarmsRouteImport.update({
@@ -59,6 +66,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlantMemoryIdRoute = PlantMemoryIdRouteImport.update({
+  id: '/plant-memory/$id',
+  path: '/plant-memory/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LogLogIdRoute = LogLogIdRouteImport.update({
   id: '/log/$logId',
   path: '/log/$logId',
@@ -73,8 +85,10 @@ export interface FileRoutesByFullPath {
   '/identify': typeof IdentifyRoute
   '/library': typeof LibraryRoute
   '/my-farms': typeof MyFarmsRoute
+  '/my-plants': typeof MyPlantsRoute
   '/review': typeof ReviewRoute
   '/log/$logId': typeof LogLogIdRoute
+  '/plant-memory/$id': typeof PlantMemoryIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -84,8 +98,10 @@ export interface FileRoutesByTo {
   '/identify': typeof IdentifyRoute
   '/library': typeof LibraryRoute
   '/my-farms': typeof MyFarmsRoute
+  '/my-plants': typeof MyPlantsRoute
   '/review': typeof ReviewRoute
   '/log/$logId': typeof LogLogIdRoute
+  '/plant-memory/$id': typeof PlantMemoryIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -96,8 +112,10 @@ export interface FileRoutesById {
   '/identify': typeof IdentifyRoute
   '/library': typeof LibraryRoute
   '/my-farms': typeof MyFarmsRoute
+  '/my-plants': typeof MyPlantsRoute
   '/review': typeof ReviewRoute
   '/log/$logId': typeof LogLogIdRoute
+  '/plant-memory/$id': typeof PlantMemoryIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -109,8 +127,10 @@ export interface FileRouteTypes {
     | '/identify'
     | '/library'
     | '/my-farms'
+    | '/my-plants'
     | '/review'
     | '/log/$logId'
+    | '/plant-memory/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -120,8 +140,10 @@ export interface FileRouteTypes {
     | '/identify'
     | '/library'
     | '/my-farms'
+    | '/my-plants'
     | '/review'
     | '/log/$logId'
+    | '/plant-memory/$id'
   id:
     | '__root__'
     | '/'
@@ -131,8 +153,10 @@ export interface FileRouteTypes {
     | '/identify'
     | '/library'
     | '/my-farms'
+    | '/my-plants'
     | '/review'
     | '/log/$logId'
+    | '/plant-memory/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -143,8 +167,10 @@ export interface RootRouteChildren {
   IdentifyRoute: typeof IdentifyRoute
   LibraryRoute: typeof LibraryRoute
   MyFarmsRoute: typeof MyFarmsRoute
+  MyPlantsRoute: typeof MyPlantsRoute
   ReviewRoute: typeof ReviewRoute
   LogLogIdRoute: typeof LogLogIdRoute
+  PlantMemoryIdRoute: typeof PlantMemoryIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -154,6 +180,13 @@ declare module '@tanstack/react-router' {
       path: '/review'
       fullPath: '/review'
       preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/my-plants': {
+      id: '/my-plants'
+      path: '/my-plants'
+      fullPath: '/my-plants'
+      preLoaderRoute: typeof MyPlantsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/my-farms': {
@@ -205,6 +238,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/plant-memory/$id': {
+      id: '/plant-memory/$id'
+      path: '/plant-memory/$id'
+      fullPath: '/plant-memory/$id'
+      preLoaderRoute: typeof PlantMemoryIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/log/$logId': {
       id: '/log/$logId'
       path: '/log/$logId'
@@ -223,8 +263,10 @@ const rootRouteChildren: RootRouteChildren = {
   IdentifyRoute: IdentifyRoute,
   LibraryRoute: LibraryRoute,
   MyFarmsRoute: MyFarmsRoute,
+  MyPlantsRoute: MyPlantsRoute,
   ReviewRoute: ReviewRoute,
   LogLogIdRoute: LogLogIdRoute,
+  PlantMemoryIdRoute: PlantMemoryIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
