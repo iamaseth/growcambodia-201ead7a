@@ -37,7 +37,8 @@ export function BottomNav() {
           <Home className="h-5 w-5" />
           <span>Feed</span>
         </Link>
-        <Link to="/my-plants" className={`${itemClass} ${active("/my-plants") ? "text-primary" : ""}`} aria-label="My plants"><Leaf className="h-5 w-5" /><span>My Plants</span></Link>\n        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Help us grow">
+        <Link to="/my-plants" className={`${itemClass} ${active("/my-plants") ? "text-primary" : ""}`} aria-label="My plants"><Leaf className="h-5 w-5" /><span>My Plants</span></Link>
+        <Link to="/chat" className={`${itemClass} ${active("/chat") ? "text-primary" : ""}`} aria-label="Help us grow">
           <MessageCircle className="h-5 w-5" />
           <span>Help Us Grow</span>
         </Link>
