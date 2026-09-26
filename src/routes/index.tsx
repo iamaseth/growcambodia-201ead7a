@@ -74,7 +74,7 @@ function Home() {
       <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b">
         <div className="max-w-2xl mx-auto flex items-center justify-between px-4 h-14">
           <Link to="/" className="flex items-center gap-2 font-bold text-primary">
-            <Sprout className="h-5 w-5" /> Grow Cambodia
+            <Sprout className="h-5 w-5" /> Grow
           </Link>
           <div className="flex items-center gap-1">
             <Link to="/library">
@@ -109,9 +109,10 @@ function Home() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 pt-4">
+        <section className="mb-4 space-y-2 rounded-xl border bg-card p-4"><h1 className="text-xl font-bold">Community ID</h1><p className="text-sm text-muted-foreground">Discover plants, share identifications and growing updates, and learn from your community. Your personal plant records stay in Plant Diary unless you choose to share them.</p><Link to="/identify"><Button size="sm"><Sprout className="mr-2 h-4 w-4"/>Identify a plant</Button></Link></section>
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="feed"><Rss className="h-4 w-4 mr-1" /> Feed</TabsTrigger>
+            <TabsTrigger value="feed"><Rss className="h-4 w-4 mr-1" /> Community</TabsTrigger>
             <TabsTrigger value="crops"><Sprout className="h-4 w-4 mr-1" /> Crops</TabsTrigger>
             <TabsTrigger value="map"><MapIcon className="h-4 w-4 mr-1" /> Map</TabsTrigger>
             <TabsTrigger value="visits"><CalendarClock className="h-4 w-4 mr-1" /> Visits</TabsTrigger>
@@ -119,7 +120,7 @@ function Home() {
 
 
           <TabsContent value="feed" className="space-y-3 mt-4">
-            <h1 className="sr-only">Community feed</h1>
+            <h2 className="sr-only">Community feed</h2>
 
             <div className="flex flex-wrap gap-1.5">
               {(["today", "week", "month", "custom"] as Preset[]).map((p) => {
