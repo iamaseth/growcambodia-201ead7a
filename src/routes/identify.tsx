@@ -120,7 +120,7 @@ function PlantResult({ result, savedIdentificationId }: { result: any; savedIden
       </div>)}</div>
       <Link to="/library"><Button variant="outline" size="sm" className="w-full">Open Cambodia Plant Library</Button></Link>
     </Card>}
-    <PlantAIChat plantContext={result} />
+    <PlantAIChat key={savedIdentificationId ?? "unsaved"} plantContext={result} identificationId={savedIdentificationId} />
     <Card className="p-4 flex items-center gap-3"><Sprout className="h-5 w-5 text-primary" /><div className="flex-1"><p className="font-medium text-sm">Growing this plant?</p><p className="text-xs text-muted-foreground">Add it to Grow Cambodia and start its photo timeline.</p></div>{savedIdentificationId ? <Link to="/plant-memory/$id" params={{ id: savedIdentificationId }}><Button size="sm">Open saved plant</Button></Link> : <Link to="/my-plants"><Button size="sm">My Plants</Button></Link>}</Card>
   </div>;
 }
