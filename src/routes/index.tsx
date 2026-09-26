@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Sprout, Map as MapIcon, Rss, LogIn, LogOut, CalendarIcon, CalendarClock, BookOpen } from "lucide-react";
+import { Sprout, Map as MapIcon, Rss, LogIn, LogOut, CalendarIcon, CalendarClock, BookOpen, Settings } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -82,6 +82,7 @@ function Home() {
                 <BookOpen className="h-4 w-4 mr-1" /> Library
               </Button>
             </Link>
+            <Link to="/settings"><Button variant="ghost" size="sm" aria-label="Settings"><Settings className="h-4 w-4" /></Button></Link>
             {user && (
               <>
                 <Link to="/my-farms">
