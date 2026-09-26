@@ -14,6 +14,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/hooks/use-auth";
 import { Toaster } from "@/components/ui/sonner";
 import { BottomNav } from "@/components/bottom-nav";
+import { InstallGuide } from "@/components/install-guide";
 
 function NotFoundComponent() {
   return (
@@ -81,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#2f7d3a" },
-      { title: "Grow Cambodia — Plant Identification & Growth Timeline" },
+      { title: "Grow Cambodia" },
       { name: "description", content: "Identify plants, get Cambodia-focused growing guidance, and track plant growth with photos." },
       { property: "og:title", content: "Grow Cambodia — Plant Identification & Growth Timeline" },
       { property: "og:description", content: "Identify plants, get Cambodia-focused growing guidance, and track plant growth with photos." },
@@ -94,7 +95,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/icon-192.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/icon-192.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
@@ -125,6 +127,7 @@ function RootComponent() {
       <AuthProvider>
         <Outlet />
         <BottomNav />
+        <InstallGuide firstVisit />
         <Toaster position="top-center" richColors />
       </AuthProvider>
     </QueryClientProvider>
