@@ -483,6 +483,41 @@ export type Database = {
         }
         Relationships: []
       }
+      plant_ai_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          identification_id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          identification_id: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          identification_id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plant_ai_messages_identification_id_fkey"
+            columns: ["identification_id"]
+            isOneToOne: false
+            referencedRelation: "plant_identifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plant_identification_observations: {
         Row: {
           accepted: boolean
