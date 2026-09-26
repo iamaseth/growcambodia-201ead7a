@@ -23,7 +23,7 @@ export function InstallGuide({ firstVisit = false }: { firstVisit?: boolean }) {
   }, [firstVisit]);
   const dismiss = () => { setOpen(false); if (firstVisit) window.localStorage.setItem("grow-install-help-seen", "1"); };
   if (firstVisit && !open) return null;
-  return <Card className={firstVisit ? "fixed inset-x-4 bottom-24 z-[60] mx-auto max-w-md space-y-3 p-4 shadow-xl" : "space-y-3 p-4"}>
+  return <>{firstVisit && <div className="fixed inset-0 z-[59] bg-black/65 backdrop-blur-sm" aria-hidden="true" />}<Card role={firstVisit ? "dialog" : undefined} aria-modal={firstVisit ? true : undefined} aria-label={firstVisit ? "Install Grow Cambodia" : undefined} className={firstVisit ? "fixed inset-x-4 top-1/2 z-[60] mx-auto max-h-[85dvh] max-w-md -translate-y-1/2 overflow-y-auto space-y-3 border bg-background p-5 shadow-2xl" : "space-y-3 p-4"}>
     <h2 className="text-lg font-semibold">Install Grow Cambodia</h2>
     <p className="text-sm text-muted-foreground">Add Grow Cambodia to your phone's Home Screen for quick access. No app store required.</p>
     <div className="flex gap-2"><Button size="sm" variant={platform === "ios" ? "default" : "outline"} onClick={() => setPlatform("ios")}>iPhone / iPad</Button><Button size="sm" variant={platform === "android" ? "default" : "outline"} onClick={() => setPlatform("android")}>Android</Button></div>
@@ -31,5 +31,5 @@ export function InstallGuide({ firstVisit = false }: { firstVisit?: boolean }) {
       <ol className="list-decimal space-y-1 pl-5 text-sm"><li>Open Grow Cambodia in Safari.</li><li>Tap Share (square with an upward arrow; you may first need the page menu).</li><li>Choose Add to Home Screen.</li><li>Turn on Open as Web App if shown, then tap Add.</li></ol> :
       <ol className="list-decimal space-y-1 pl-5 text-sm"><li>Open Grow Cambodia in Chrome.</li><li>Tap the three-dot menu.</li><li>Choose Install app or Add to Home screen.</li><li>Follow the prompts to install.</li></ol>}
     <div className="flex flex-wrap gap-2">{platform === "android" && prompt && !installed && <Button onClick={async () => { await prompt.prompt(); await prompt.userChoice; setPrompt(null); dismiss(); }}>Install Grow Cambodia</Button>}{firstVisit && <Button variant="outline" onClick={dismiss}>Maybe later</Button>}</div>
-  </Card>;
+  </Card></>;
 }
