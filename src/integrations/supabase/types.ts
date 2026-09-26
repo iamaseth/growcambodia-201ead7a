@@ -141,10 +141,20 @@ export type Database = {
           description: string | null
           edible_parts: string[] | null
           entry_type: string
+          evidence_level: string | null
+          evidence_summary: string | null
+          featured_area: string | null
+          featured_reason: string | null
+          health_research_summary: string | null
+          highlight_priority: number
           id: string
           khmer_name: string | null
+          local_opportunity: string | null
+          nutrition_summary: string | null
+          nutrition_tags: string[]
           preparation_notes: string | null
           region_text: string | null
+          research_sources: Json
           safety_warning: string | null
           scientific_name: string | null
           season_text: string | null
@@ -152,6 +162,7 @@ export type Database = {
           source_url: string | null
           traditional_uses: string[] | null
           updated_at: string
+          use_tags: string[]
           verification_status: string
         }
         Insert: {
@@ -161,10 +172,20 @@ export type Database = {
           description?: string | null
           edible_parts?: string[] | null
           entry_type: string
+          evidence_level?: string | null
+          evidence_summary?: string | null
+          featured_area?: string | null
+          featured_reason?: string | null
+          health_research_summary?: string | null
+          highlight_priority?: number
           id?: string
           khmer_name?: string | null
+          local_opportunity?: string | null
+          nutrition_summary?: string | null
+          nutrition_tags?: string[]
           preparation_notes?: string | null
           region_text?: string | null
+          research_sources?: Json
           safety_warning?: string | null
           scientific_name?: string | null
           season_text?: string | null
@@ -172,6 +193,7 @@ export type Database = {
           source_url?: string | null
           traditional_uses?: string[] | null
           updated_at?: string
+          use_tags?: string[]
           verification_status?: string
         }
         Update: {
@@ -181,10 +203,20 @@ export type Database = {
           description?: string | null
           edible_parts?: string[] | null
           entry_type?: string
+          evidence_level?: string | null
+          evidence_summary?: string | null
+          featured_area?: string | null
+          featured_reason?: string | null
+          health_research_summary?: string | null
+          highlight_priority?: number
           id?: string
           khmer_name?: string | null
+          local_opportunity?: string | null
+          nutrition_summary?: string | null
+          nutrition_tags?: string[]
           preparation_notes?: string | null
           region_text?: string | null
+          research_sources?: Json
           safety_warning?: string | null
           scientific_name?: string | null
           season_text?: string | null
@@ -192,6 +224,7 @@ export type Database = {
           source_url?: string | null
           traditional_uses?: string[] | null
           updated_at?: string
+          use_tags?: string[]
           verification_status?: string
         }
         Relationships: []
@@ -450,6 +483,53 @@ export type Database = {
         }
         Relationships: []
       }
+      plant_identification_observations: {
+        Row: {
+          accepted: boolean
+          body: string | null
+          created_at: string
+          id: string
+          identification_id: string
+          image_path: string | null
+          observation_type: string
+          suggested_common_name: string | null
+          suggested_scientific_name: string | null
+          user_id: string
+        }
+        Insert: {
+          accepted?: boolean
+          body?: string | null
+          created_at?: string
+          id?: string
+          identification_id: string
+          image_path?: string | null
+          observation_type?: string
+          suggested_common_name?: string | null
+          suggested_scientific_name?: string | null
+          user_id: string
+        }
+        Update: {
+          accepted?: boolean
+          body?: string | null
+          created_at?: string
+          id?: string
+          identification_id?: string
+          image_path?: string | null
+          observation_type?: string
+          suggested_common_name?: string | null
+          suggested_scientific_name?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plant_identification_observations_identification_id_fkey"
+            columns: ["identification_id"]
+            isOneToOne: false
+            referencedRelation: "plant_identifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       plant_identifications: {
         Row: {
           common_name: string | null
@@ -458,7 +538,9 @@ export type Database = {
           id: string
           identification_source: string
           image_path: string | null
+          is_community_shared: boolean
           latitude: number | null
+          library_entry_id: string | null
           location_accuracy_m: number | null
           longitude: number | null
           result_json: Json | null
@@ -474,7 +556,9 @@ export type Database = {
           id?: string
           identification_source?: string
           image_path?: string | null
+          is_community_shared?: boolean
           latitude?: number | null
+          library_entry_id?: string | null
           location_accuracy_m?: number | null
           longitude?: number | null
           result_json?: Json | null
@@ -490,7 +574,9 @@ export type Database = {
           id?: string
           identification_source?: string
           image_path?: string | null
+          is_community_shared?: boolean
           latitude?: number | null
+          library_entry_id?: string | null
           location_accuracy_m?: number | null
           longitude?: number | null
           result_json?: Json | null
@@ -499,7 +585,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "plant_identifications_library_entry_id_fkey"
+            columns: ["library_entry_id"]
+            isOneToOne: false
+            referencedRelation: "community_knowledge_library"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       plant_logs: {
         Row: {
